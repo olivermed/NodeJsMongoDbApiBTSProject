@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+</head>
+<body>
+<ul class="quotes">
+  <% for(var i=0; i<quotes.length; i++) {%>
+    <li class="quote">
+      <span><%= quotes[i].nom %></span>
+      <span><%= quotes[i].prix %></span>
+      <span><%= quotes[i].description %></span>
+      <span><%= quotes[i].categorie %></span>
+      <span><%= quotes[i].image %></span>
+    </li>
+  <% } %>
+</ul>
+<form action="/addProduct" method="POST">
+  <input type="text" placeholder="nom" name="nom">
+  <input type="text" placeholder="prix" name="prix">
+  <input type="text" placeholder="description" name="description">
+  <input type="text" placeholder="categorie" name="categorie">
+  <input type="text" placeholder="image" name="image">
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>
