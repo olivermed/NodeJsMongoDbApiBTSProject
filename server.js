@@ -48,8 +48,9 @@ function removeDocument(req, res, Collection, redirection) {
 
 function getCollection(Collection, res) {
   Collection.find().toArray(function(err, results) {
-    res.writeHead(200, {"Content-Type": "application/json"});
-    res.end(JSON.stringify(results));
+      var collection = {results: results};
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.end(JSON.stringify(collection));
   });
 }
 
@@ -73,20 +74,24 @@ MongoClient.connect(url, function (err, db) {
     // ----------------- Operations on product collection ---------
     //Home of application
   	app.get('/', function(req, res) {
-      var cursor = Product.find().toArray(function(err, results) {
-          console.log("List of products", results);
-          res.render('index.ejs', {products: results});
-      });
+        Categorie.find({}).toArray(function(err, resuslt) {
+            Product.find().sort({ nom: 1 }).toArray(function(err, results) {
+                console.log("List of products", results);
+                res.render('index.ejs', {products: results, categories: resuslt});
+            });
+        });
     });
 
     //Formulaire to modify a product
     app.post('/modifySetProductSite', function(req, res){
-      var o_id = new mongodb.ObjectID(req.body.id);
-      Product.find({_id: o_id}).toArray(function(err, results) {
-        if (err) return console.log(err);
-        console.log("Document to modify :", results);
-        res.render('modifyProduct.ejs', {product: results});
-      });
+        var o_id = new mongodb.ObjectID(req.body.id);
+        Categorie.find({}).sort( { categorie: 1 } ).toArray(function(err, resuslt) {
+            Product.find({_id: o_id}).toArray(function(err, results) {
+                if (err) return console.log(err);
+                console.log("Document to modify :", results);
+                res.render('modifyProduct.ejs', {product: results, categories: resuslt});
+            });
+        });
     });
 
     //Modify a product

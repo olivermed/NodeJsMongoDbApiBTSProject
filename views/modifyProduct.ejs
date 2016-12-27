@@ -47,7 +47,12 @@
                     <input type="text" value="<%= product[0].nom %>" placeholder="nom" name="nom">
                     <input type="text" value="<%= product[0].prix %>" placeholder="prix" name="prix">
                     <input type="text" value="<%= product[0].description %>" placeholder="description" name="description">
-                    <input type="text" value="<%= product[0].categorie %>" placeholder="categorie" name="categorie">
+                   <select  name="categorie">
+                        <% for(var i=0; i<categories.length; i++) {%>
+                            <option <% if (categories[i]._id == product[0].categorie) { %> selected <% } %>
+                                    value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
+                        <% } %>
+                    </select>
                     <input type="text" value="<%= product[0].image %>" placeholder="image" name="image">
                     <button type="submit">Modifier</button>
                   </form>
