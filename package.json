@@ -1,0 +1,32 @@
+{
+  "name": "apipduc",
+  "version": "1.0.0",
+  "description": "Api for a school application",
+  "main": "server.js",
+  "dependencies": {
+    "ejs": "2.5.2",
+    "bootstrap": "3.3.7",
+    "body-parser": "1.15.2",
+    "express": "4.14.0",
+    "mongodb": "2.2.11",
+    "jsdom": "9.8.3",
+    "multer": "1.2.1",
+    "jquery": "3.1.1",
+    "nodemon": "^1.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olivermed/NodeJsMongoDbApiBTSProject.git"
+  },
+  "author": "Olivier Medec",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olivermed/NodeJsMongoDbApiBTSProject/issues"
+  },
+  "homepage": "https://github.com/olivermed/NodeJsMongoDbApiBTSProject#readme"
+}

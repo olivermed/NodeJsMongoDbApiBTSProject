@@ -1,43 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
- 
- <link rel="stylesheet" href="/css/simple-sidebar.css">
-
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <title>MY APP</title>
-</head>
-
-<body>
+<% include header.ejs %>
 
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        PDUC admin
-                    </a>
-                </li>
-                <li style="background-color: #6f6c67;">
-                    <a href="/">Liste des produits</a>
-                </li>
-                <li>
-                    <a href="/getCategorieSite">Liste des catégories</a>
-                </li>
-            </ul>
-        </div>
+        
         <!-- /#sidebar-wrapper -->
+        <% include side_bar.ejs %>
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
@@ -83,16 +50,18 @@
                     <% } %>
                     </tbody>
                   </table>
-                  <form class="form-inline" action="/addProductSite" method="POST">
+                  <form class="form-inline" action="/addProductSite" method="POST" enctype="multipart/form-data">
                     <input type="text" placeholder="nom" name="nom">
                     <input type="text" placeholder="prix" name="prix">
+                      
                     <input type="text" placeholder="description" name="description">
                     <select  name="categorie">
                         <% for(var i=0; i<categories.length; i++) {%>
                             <option value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
                         <% } %>
                     </select>
-                    <input type="text" placeholder="image" name="image">
+                    <input type="file" name="image" onchange="previewFile()">
+                    <img src="" height="200" alt="Image preview...">
                     <button type="submit">Add</button>
                   </form>
                 </div>
@@ -107,6 +76,24 @@
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+        
+    function previewFile(){
+       var preview = document.querySelector('img'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "";
+       }
+  }
+
+  previewFile();
     </script>
 
 </body>

@@ -1,0 +1,19 @@
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <a href="#">
+                PDUC admin
+            </a>
+        </li>
+        <li <% if (side_bar === 1) { %>style="background-color: #6f6c67;" <% } %>>
+            <a href="/">Liste des produits</a>
+        </li>
+        <li <% if (side_bar === 2) { %>style="background-color: #6f6c67;" <% } %>>
+            <a href="/getCategorieSite">Liste des catégories</a>
+        </li>
+        <li <% if (side_bar === 3) { %>style="background-color: #6f6c67;" <% } %>>
+            <a href="/getSousCategorieSite">Liste des sous-catégories</a>
+        </li>
+    </ul>
+</div>

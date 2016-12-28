@@ -1,11 +1,25 @@
 var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
+var multer  = require('multer')
+var upload = multer({ dest: 'Public/images' })
+var fs = require('fs');
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(__dirname + '/public'));
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'Public/images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+var upload = multer({ storage: storage });
 
 //Setting ejs module
 app.set('view engine', 'ejs');
@@ -29,12 +43,15 @@ function ModifyDocument(req, res, Collection, redirection) {
 }
 
 function saveDocument(req, res, Collection, redirection) {
-  Collection.save(req.body, function(err, result) {
-      if (err) return console.log(err);
-
-      console.log(req.body);
-      console.log('saved to database');
-      res.redirect(redirection);
+    if (req.file !== undefined) {
+        req.body.name = req.file.originalname;
+    }
+    
+    Collection.save(req.body, function(err, result) {
+        if (err) return console.log(err);
+        console.log(req.body);
+        console.log('saved to database');
+        res.redirect(redirection);
   });
 }
 
@@ -64,6 +81,7 @@ MongoClient.connect(url, function (err, db) {
     // Get collection
     var Product = db.collection('Product');
     var Categorie = db.collection('Categorie');
+    var SousCategorie = db.collection('SousCategorie');
 
     app.listen(3000, function() {
   	  //console.log('listening on 3000');
@@ -76,8 +94,8 @@ MongoClient.connect(url, function (err, db) {
   	app.get('/', function(req, res) {
         Categorie.find({}).toArray(function(err, resuslt) {
             Product.find().sort({ nom: 1 }).toArray(function(err, results) {
-                console.log("List of products", results);
-                res.render('index.ejs', {products: results, categories: resuslt});
+                //console.log("List of products", results);
+                res.render('index.ejs', {products: results, categories: resuslt, side_bar: 1});
             });
         });
     });
@@ -89,7 +107,7 @@ MongoClient.connect(url, function (err, db) {
             Product.find({_id: o_id}).toArray(function(err, results) {
                 if (err) return console.log(err);
                 console.log("Document to modify :", results);
-                res.render('modifyProduct.ejs', {product: results, categories: resuslt});
+                res.render('modifyProduct.ejs', {product: results, categories: resuslt, side_bar: 1});
             });
         });
     });
@@ -101,8 +119,8 @@ MongoClient.connect(url, function (err, db) {
     });
 
     //Add a product
-  	app.post('/addProductSite', function(req, res) {
-  	   saveDocument(req, res, Product, '/');
+  	app.post('/addProductSite', upload.single('image'), function (req, res, next) {
+        saveDocument(req, res, Product, '/');
   	});
 
     //Delete a product
@@ -117,8 +135,8 @@ MongoClient.connect(url, function (err, db) {
     app.get('/getCategorieSite', function(req, res) {
       Categorie.find({}).toArray(function(err, resuslt) {
         if (err) return console.log(err);
-        console.log("Collection Categorie: ", resuslt);
-        res.render('getCategorie.ejs', {categories: resuslt});
+        //console.log("Collection Categorie: ", resuslt);
+        res.render('getCategorie.ejs', {categories: resuslt, side_bar: 2});
       });
     });
 
@@ -132,8 +150,8 @@ MongoClient.connect(url, function (err, db) {
       var o_id = new mongodb.ObjectID(req.body.id);
       Categorie.find({_id: o_id}).toArray(function(err, results) {
         if (err) return console.log(err);
-        console.log("Document to modify :", results);
-        res.render('modifyCategorie.ejs', {categorie: results});
+        //console.log("Document to modify :", results);
+        res.render('modifyCategorie.ejs', {categorie: results, side_bar: 2});
       });
     });
 
@@ -144,8 +162,20 @@ MongoClient.connect(url, function (err, db) {
 
     //Delete a categorie
     app.post('/deleteCategorieSite', function(req, res) {
-      console.log("Object to delete", req.body);
+      //console.log("Object to delete", req.body);
       removeDocument(req, res, Categorie, '/getCategorieSite');
+    });
+      
+      
+    // ----------------- Operations on sous catégorie collection --
+      
+      //Get list of catgorie
+    app.get('/getSousCategorieSite', function(req, res) {
+        SousCategorie.find({}).toArray(function(err, resuslt) {
+            if (err) return console.log(err);
+            console.log("Collection Sous categorie Categorie: ", resuslt);
+            res.render('getSousCategorie.ejs', {categories: resuslt});
+        });
     });
 
     // ----------------- Partie API -------------------------------
@@ -159,7 +189,7 @@ MongoClient.connect(url, function (err, db) {
      app.get('/getProduct', function(req, res) {
       var o_id = new mongodb.ObjectID("5838b47a68546040400835a4");
       Product.findOne({_id: o_id}, function(err, document) {
-        console.log(JSON.stringify(document));
+        //console.log(JSON.stringify(document));
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(document));
       });
