@@ -38,9 +38,10 @@
                     <% } %>
                     </tbody>
                   </table>
-                  <form class="form-inline" action="/addCategorieSite" method="POST">
-                    <input type="text" placeholder="Category" name="categorie">
-                    <input type="text" placeholder="image" name="image">
+                  <form class="form-inline" action="/addCategorieSite" method="POST" enctype="multipart/form-data">
+                      <input type="text" placeholder="Category" name="categorie">
+<!--                    <input type="text" placeholder="image" name="image">-->
+                      <input type="file" name="image">
                     <button type="submit">Add</button>
                   </form>
                 </div>

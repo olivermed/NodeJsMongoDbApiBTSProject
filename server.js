@@ -10,12 +10,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(__dirname + '/public'));
 
+var picname = "";
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'Public/images')
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+      picname = Date.now() + '-' + file.originalname;
+      cb(null, picname);
   }
 });
 
@@ -28,9 +31,9 @@ app.set('view engine', 'ejs');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL
-var url = 'mongodb://localhost:27017/DartyDataBase';
+//var url = 'mongodb://localhost:27017/DartyDataBase';
 
-//var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
+var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
 //To check The database : https://mlab.com/
 
 function ModifyDocument(req, res, Collection, redirection) {
@@ -44,7 +47,8 @@ function ModifyDocument(req, res, Collection, redirection) {
 
 function saveDocument(req, res, Collection, redirection) {
     if (req.file !== undefined) {
-        req.body.name = req.file.originalname;
+        console.log("Picname :: ", picname);
+        req.body.image = picname;
     }
     
     Collection.save(req.body, function(err, result) {
@@ -83,11 +87,9 @@ MongoClient.connect(url, function (err, db) {
     var Categorie = db.collection('Categorie');
     var SousCategorie = db.collection('SousCategorie');
 
-    //app.listen(process.env.PORT, function() {});
+    app.listen(process.env.PORT, function() {});
 
-    app.listen(3000, function() {
-  	  //console.log('listening on 3000');
-  	});
+    //app.listen(3000, function() {});
 
     // ----------------- Partie site ------------------------------
 
@@ -115,7 +117,7 @@ MongoClient.connect(url, function (err, db) {
     });
 
     //Modify a product
-    app.post('/modifyProductSite', function(req, res){
+    app.post('/modifyProductSite', upload.single('image'), function (req, res, next){
       console.log("Object to update", req.body);
       ModifyDocument(req, res, Product, '/');
     });
@@ -143,7 +145,8 @@ MongoClient.connect(url, function (err, db) {
     });
 
     //Add a catégorie
-    app.post('/addCategorieSite', function(req, res) {
+    app.post('/addCategorieSite', upload.single('image'), function (req, res, next) {
+        console.log("req file :: ", req.file);
       saveDocument(req, res, Categorie, '/getCategorieSite');
     });
 
@@ -158,7 +161,7 @@ MongoClient.connect(url, function (err, db) {
     });
 
     //Modify a category
-    app.post('/modifyCategorieSite', function(req, res) {
+    app.post('/modifyCategorieSite', upload.single('image'), function (req, res, next) {
       ModifyDocument(req, res, Categorie, '/getCategorieSite');
     });
 

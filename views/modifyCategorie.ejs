@@ -10,10 +10,11 @@
             <div class="container-fluid">
                 <div class="row">     
                   <h1>Nom du produit : <%= categorie[0].categorie %></h1>
-                  <form class="form-inline" action="/ModifyCategorieSite" method="POST">
+                  <form class="form-inline" action="/ModifyCategorieSite" method="POST" enctype="multipart/form-data">
                     <input type="hidden" value="<%= categorie[0]._id %>" name="id">
                     <input type="text" value="<%= categorie[0].categorie %>" placeholder="categorie" name="categorie">
-                    <input type="text" value="<%= categorie[0].image %>" placeholder="image" name="image">
+<!--                    <input type="text" value="<%= categorie[0].image %>" placeholder="image" name="image">-->
+                      <input type="file" name="image">
                     <button type="submit">Modifier</button>
                   </form>
                 </div>
