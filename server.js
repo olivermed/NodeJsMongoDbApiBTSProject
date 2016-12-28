@@ -28,9 +28,9 @@ app.set('view engine', 'ejs');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL
-//var url = 'mongodb://localhost:27017/DartyDataBase';
+var url = 'mongodb://localhost:27017/DartyDataBase';
 
-var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
+//var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
 //To check The database : https://mlab.com/
 
 function ModifyDocument(req, res, Collection, redirection) {
@@ -83,7 +83,9 @@ MongoClient.connect(url, function (err, db) {
     var Categorie = db.collection('Categorie');
     var SousCategorie = db.collection('SousCategorie');
 
-    app.listen(process.env.PORT, function() {
+    //app.listen(process.env.PORT, function() {});
+
+    app.listen(3000, function() {
   	  //console.log('listening on 3000');
   	});
 
