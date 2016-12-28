@@ -83,7 +83,7 @@ MongoClient.connect(url, function (err, db) {
     var Categorie = db.collection('Categorie');
     var SousCategorie = db.collection('SousCategorie');
 
-    app.listen(3000, function() {
+    app.listen(process.env.PORT, function() {
   	  //console.log('listening on 3000');
   	});
 
