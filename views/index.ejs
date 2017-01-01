@@ -1,5 +1,5 @@
 <% include header.ejs %>
-
+<!-- Page Produit -->
     <div id="wrapper">
 
         
@@ -10,6 +10,24 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" action="/addProductSite" method="POST" enctype="multipart/form-data">
+                                <input type="text" placeholder="nom" name="nom">
+                                <input type="text" placeholder="prix" name="prix">
+
+                                <input type="text" placeholder="description" name="description">
+                                <select  name="sousCategories">
+                                    <% for(var i=0; i<sousCategories.length; i++) {%>
+                                        <option value="<%= sousCategories[i]._id %>"><%= sousCategories[i].sousCategorie %></option>
+                                    <% } %>
+                                </select>
+                                <input type="file" name="image" onchange="previewFile()">
+                                <img src="" height="200" alt="Image preview...">
+                                <button type="submit">Add</button>
+                            </form>
+                        </div>
+                    </div>
                     <table class="table products">
                     <thead>
                       <tr>
@@ -17,7 +35,7 @@
                         <th>Nom</th>
                         <th>Prix</th>
                         <th>Description</th>
-                        <th>Categorie</th>
+                        <th>Sous Categorie</th>
                         <th>Image</th>
                       </tr>
                     </thead>
@@ -29,13 +47,13 @@
                         <td><%= products[i].prix %></td>
                         <td><%= products[i].description %></td>
                         <td>
-                            <% for(var j=0; j<categories.length; j++) {
-                                if (products[i].categorie == categories[j]._id) { %>
-                                       <%= categories[j].categorie %>
+                            <% for(var j=0; j<sousCategories.length; j++) {
+                                if (products[i].sousCategorie == sousCategories[j]._id) { %>
+                                       <%= sousCategories[j].sousCategorie %>
                                     <% }
                                 } %>
                         </td>
-                        <td><%= products[i].image %></td>
+                        <td><img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>" style="width:128px;height:128px;"></td>
                         <td>
                           <form action="/modifySetProductSite" method="POST">
                             <input type="hidden" name="id" value="<%= products[i]._id %>">
@@ -50,20 +68,6 @@
                     <% } %>
                     </tbody>
                   </table>
-                  <form class="form-inline" action="/addProductSite" method="POST" enctype="multipart/form-data">
-                    <input type="text" placeholder="nom" name="nom">
-                    <input type="text" placeholder="prix" name="prix">
-                      
-                    <input type="text" placeholder="description" name="description">
-                    <select  name="categorie">
-                        <% for(var i=0; i<categories.length; i++) {%>
-                            <option value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
-                        <% } %>
-                    </select>
-                    <input type="file" name="image" onchange="previewFile()">
-                    <img src="" height="200" alt="Image preview...">
-                    <button type="submit">Add</button>
-                  </form>
                 </div>
             </div>
         </div>

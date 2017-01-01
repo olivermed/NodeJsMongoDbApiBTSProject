@@ -10,6 +10,15 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" action="/addCategorieSite" method="POST" enctype="multipart/form-data">
+                                <input type="text" placeholder="Category" name="categorie">
+                                <input type="file" name="image">
+                                <button type="submit">Add</button>
+                            </form>
+                        </div>
+                    </div>
                   <table class="table categories">
                     <thead>
                       <tr>
@@ -23,7 +32,7 @@
                       <tr>
                         <td><%= categories[i]._id %></td>
                         <td><%= categories[i].categorie %></td>
-                        <td><%= categories[i].image %></td>
+                        <td><img src="/images/<%= categories[i].image %>" alt="<%= categories[i].image %>" style="width:128px;height:128px;"></td>
                         <td>
                           <form action="/ModifyCategorieSetSite" method="POST">
                             <input type="hidden" name="id" value="<%= categories[i]._id %>">
@@ -38,12 +47,6 @@
                     <% } %>
                     </tbody>
                   </table>
-                  <form class="form-inline" action="/addCategorieSite" method="POST" enctype="multipart/form-data">
-                      <input type="text" placeholder="Category" name="categorie">
-<!--                    <input type="text" placeholder="image" name="image">-->
-                      <input type="file" name="image">
-                    <button type="submit">Add</button>
-                  </form>
                 </div>
             </div>
         </div>

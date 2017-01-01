@@ -1,0 +1,33 @@
+<% include header.ejs %>
+
+<div id="wrapper">
+        <!-- Sidebar -->
+      <% include side_bar.ejs %>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">     
+                  <h1>Nom du produit : <%= sousCategories[0].sousCategorie %></h1>
+                  <form class="form-inline" action="/ModifyCategorieSite" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="<%= sousCategories[0]._id %>" name="id">
+                    <input type="text" value="<%= sousCategories[0].sousCategorie %>" placeholder="sousCategories" name="sousCategories">
+                      <select  name="categorie">
+                        <% for(var i=0; i<categories.length; i++) {%>
+                            <option <% if (categories[i]._id == sousCategories[0].categorie) { %> selected <% } %>
+                                    value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
+                        <% } %>
+                    </select>
+                      <input type="file" name="image">
+                    <button type="submit">Modifier</button>
+                  </form>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+
+
+</body>
+</html>

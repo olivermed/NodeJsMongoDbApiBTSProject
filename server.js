@@ -31,10 +31,14 @@ app.set('view engine', 'ejs');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL
-//var url = 'mongodb://localhost:27017/DartyDataBase';
+var url = 'mongodb://localhost:27017/DartyDataBase';
 
-var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
+//var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
 //To check The database : https://mlab.com/
+
+//app.listen(process.env.PORT, function() {});
+
+app.listen(3000, function() {});
 
 function ModifyDocument(req, res, Collection, redirection) {
   var o_id = new mongodb.ObjectID(req.body.id);
@@ -87,19 +91,15 @@ MongoClient.connect(url, function (err, db) {
     var Categorie = db.collection('Categorie');
     var SousCategorie = db.collection('SousCategorie');
 
-    app.listen(process.env.PORT, function() {});
-
-    //app.listen(3000, function() {});
-
     // ----------------- Partie site ------------------------------
 
     // ----------------- Operations on product collection ---------
     //Home of application
   	app.get('/', function(req, res) {
-        Categorie.find({}).toArray(function(err, resuslt) {
-            Product.find().sort({ nom: 1 }).toArray(function(err, results) {
+        SousCategorie.find({}).toArray(function(err, sousCategories) {
+            Product.find().sort({ nom: 1 }).toArray(function(err, products) {
                 //console.log("List of products", results);
-                res.render('index.ejs', {products: results, categories: resuslt, side_bar: 1});
+                res.render('index.ejs', {products: products, sousCategories: sousCategories, side_bar: 1});
             });
         });
     });
@@ -174,13 +174,44 @@ MongoClient.connect(url, function (err, db) {
       
     // ----------------- Operations on sous catégorie collection --
       
-      //Get list of catgorie
+      //Get list of sous catgorie
     app.get('/getSousCategorieSite', function(req, res) {
-        SousCategorie.find({}).toArray(function(err, resuslt) {
-            if (err) return console.log(err);
-            console.log("Collection Sous categorie Categorie: ", resuslt);
-            res.render('getSousCategorie.ejs', {categories: resuslt});
+        Categorie.find({}).toArray(function(err, categories){
+            console.log("Categorie des sous categories :", categories);
+            SousCategorie.find({}).toArray(function(err, result) {
+                if (err) return console.log(err);
+                console.log("Collection Sous categorie Categorie: ", result);
+                res.render('getSousCategorie.ejs', {sousCategories: result, categories: categories, side_bar: 3});
+            });
         });
+    });
+
+    //Formulaire to modify a sous categorie
+    app.post('/ModifySousCategorieSetSite', function(req, res) {
+      var o_id = new mongodb.ObjectID(req.body.id);
+        Categorie.find({}).toArray(function(err, categories){
+            SousCategorie.find({_id: o_id}).toArray(function(err, results) {
+                if (err) return console.log(err);
+                //console.log("Document to modify :", results);
+                res.render('modifySousCategorie.ejs', {sousCategories: results, categories: categories, side_bar: 3});
+            });
+        });
+    });
+
+    //Add a sous catégorie
+    app.post('/addSousCategorieSite', upload.single('image'), function (req, res, next) {
+        saveDocument(req, res, SousCategorie, '/getSousCategorieSite');
+    });
+
+    //Modify a category
+    app.post('/modifySousCategorieSite', upload.single('image'), function (req, res, next) {
+        ModifyDocument(req, res, SousCategorie, '/getSousCategorieSite');
+    });
+
+    //Delete a categorie
+    app.post('/deleteSousCategorieSite', function(req, res) {
+        //console.log("Object to delete", req.body);
+        removeDocument(req, res, SousCategorie, '/getSousCategorieSite');
     });
 
     // ----------------- Partie API -------------------------------
