@@ -246,5 +246,10 @@ MongoClient.connect(url, function (err, db) {
       });
     });
 
+    //Get list of category
+    app.get('/getSousCategories', function(req, res) {
+      getCollection(SousCategorie, res);
+    });
+
   } // Fin else
 });
