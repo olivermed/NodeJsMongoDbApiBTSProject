@@ -228,7 +228,7 @@ MongoClient.connect(url, function (err, db) {
             Product.findOne({sousCategorie: o_sousCategorie}, function(err, document) {
             //console.log(JSON.stringify(document));
             res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(document));
+            res.end(JSON.stringify({results: document}));
           });
     });
 
