@@ -221,6 +221,17 @@ MongoClient.connect(url, function (err, db) {
       getCollection(Product, res);
     });
 
+    //Get list of products
+    app.get('/getProductsBySubCat/:subCat', function(req, res) {
+        console.log("Subategorie", req.params.subCat);
+        var o_sousCategorie = new mongodb.ObjectID(req.params.subCat);
+            Product.findOne({sousCategorie: o_sousCategorie}, function(err, document) {
+            //console.log(JSON.stringify(document));
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(document));
+          });
+    });
+
     //Get product by id
      app.get('/getProduct', function(req, res) {
       var o_id = new mongodb.ObjectID("5838b47a68546040400835a4");
