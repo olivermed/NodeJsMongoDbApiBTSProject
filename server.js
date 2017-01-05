@@ -226,7 +226,7 @@ MongoClient.connect(url, function (err, db) {
         Product.find({sousCategorie: req.params.subCat}).toArray(function(err, result) {
             console.log(result);
             res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
+            res.end(JSON.stringify({results: result}));
         });
     });
 
