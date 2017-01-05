@@ -223,13 +223,11 @@ MongoClient.connect(url, function (err, db) {
 
     //Get list of products
     app.get('/getProductsBySubCat/:subCat', function(req, res) {
-        console.log("Subategorie", req.params.subCat);
-        var o_sousCategorie = new mongodb.ObjectID(req.params.subCat);
-            Product.findOne({sousCategorie: o_sousCategorie}, function(err, document) {
-            //console.log(JSON.stringify(document));
+        Product.find({sousCategorie: req.params.subCat}).toArray(function(err, result) {
+            console.log(result);
             res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({results: document}));
-          });
+            res.end(JSON.stringify(result));
+        });
     });
 
     //Get product by id
