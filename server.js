@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var multer  = require('multer')
 var upload = multer({ dest: 'Public/images' })
 var fs = require('fs');
+var mongoose = require('mongoose');
+var Grid = require('gridfs-stream');
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -49,28 +51,6 @@ function ModifyDocument(req, res, Collection, redirection) {
   res.redirect(redirection);
 }
 
-function saveDocument(req, res, Collection, redirection) {
-    if (req.file !== undefined) {
-        console.log("Picname :: ", picname);
-        req.body.image = picname;
-    }
-    
-    Collection.save(req.body, function(err, result) {
-        if (err) return console.log(err);
-        console.log(req.body);
-        console.log('saved to database');
-        res.redirect(redirection);
-  });
-}
-
-function removeDocument(req, res, Collection, redirection) {
-  var o_id = new mongodb.ObjectID(req.body.id);
-    Collection.remove({_id: o_id}, function(err, result) {
-      console.log('Object ' + req.body.id + ' deleted from database');
-      res.redirect(redirection);
-    });
-}
-
 function getCollection(Collection, res) {
   Collection.find().toArray(function(err, results) {
       var collection = {results: results};
@@ -90,6 +70,75 @@ MongoClient.connect(url, function (err, db) {
     var Product = db.collection('Product');
     var Categorie = db.collection('Categorie');
     var SousCategorie = db.collection('SousCategorie');
+    var Files = db.collection('fs.files');
+
+    Grid.mongo = mongoose.mongo;
+    var gfs = Grid(db);
+
+    function saveDocument(req, res, Collection, redirection) {
+        if (req.file !== undefined) {
+            console.log("Picname :: ", picname);
+            req.body.image = picname;
+        }
+        Collection.save(req.body, function(err, result) {
+            if (err) return console.log(err);
+            console.log(req.body);
+            console.log('saved to database');
+            res.redirect(redirection);
+            uploadToDb(req);
+      });
+    }
+
+    function removeDocument(req, res, Collection, redirection) {
+      var o_id = new mongodb.ObjectID(req.body.id);
+        Collection.find({_id: o_id}).toArray(function(err, obj){
+            Collection.remove({_id: o_id}, function(err, result) {
+              console.log('Object ' , req.body , ' deleted from database');
+              res.redirect(redirection);
+            });
+
+            Files.remove({filename: obj[0].image}, function(err, result) {
+                if (err) return console.log(err);
+              console.log('Object ' , obj[0].image , ' deleted from database');
+            });
+        });
+    }
+
+    function uploadToDb(req){
+        var dirname = __dirname;
+        console.log(dirname);
+        console.log(req.file);
+        //var filename = req.file.name;
+        var path = req.file.path;
+        var type = req.file.mimetype;
+
+        var read_stream =  fs.createReadStream(dirname + '/' + path);
+
+        var writestream = gfs.createWriteStream({
+            filename: picname
+        });
+        read_stream.pipe(writestream);
+    }
+
+    app.get('/image/:id',function(req,res){
+        var pic_id = req.params.id;
+        console.log("req.params: ", req.params);
+
+        Files.find({filename: pic_id}).toArray(function (err, files) {
+
+            if (err) {
+                res.json(err);
+            }
+            if (files.length > 0) {
+                var mime = 'image/jpeg';
+                res.set('Content-Type', mime);
+                var read_stream = gfs.createReadStream({filename: pic_id});
+                read_stream.pipe(res);
+            } else {
+                res.json('File Not Found');
+            }
+        });
+    });
 
     // ----------------- Partie site ------------------------------
 
