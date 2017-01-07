@@ -311,7 +311,7 @@ MongoClient.connect(url, function (err, db) {
 
         app.get('/getSousCategorie/:idSousCat', function(req, res) {
             var o_id = new mongodb.ObjectID(req.params.idSousCat);
-            SousCategorie.findOne({categorie: req.params.idSousCat}).toArray(function(err, document) {
+            SousCategorie.find({categorie: req.params.idSousCat}).toArray(function(err, document) {
                 console.log(JSON.stringify(document));
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({results: document}));
