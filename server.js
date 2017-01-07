@@ -120,7 +120,7 @@ MongoClient.connect(url, function (err, db) {
         read_stream.pipe(writestream);
     }
 
-    app.get('/image/:id',function(req,res){
+    app.get('/images/:id',function(req,res){
         var pic_id = req.params.id;
         console.log("req.params: ", req.params);
 
