@@ -32,7 +32,7 @@
                       <tr>
                         <td><%= categories[i]._id %></td>
                         <td><%= categories[i].categorie %></td>
-                        <td><img src="/image/<%= categories[i].image %>" alt="<%= categories[i].image %>" style="width:128px;height:128px;"></td>
+                        <td><img src="/images/<%= categories[i].image %>" alt="<%= categories[i].image %>" style="width:128px;height:128px;"></td>
                         <td>
                           <form action="/ModifyCategorieSetSite" method="POST">
                             <input type="hidden" name="id" value="<%= categories[i]._id %>">
