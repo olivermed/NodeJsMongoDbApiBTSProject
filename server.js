@@ -1,8 +1,8 @@
 var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
-var multer  = require('multer')
-var upload = multer({ dest: 'Public/images' })
+var multer  = require('multer');
+var upload = multer({ dest: 'Public/images' });
 var fs = require('fs');
 var mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
@@ -16,7 +16,7 @@ var picname = "";
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'Public/images')
+        cb(null, 'Public/images');
     },
     filename: function (req, file, cb) {
         picname = Date.now() + '-' + file.originalname;
@@ -40,7 +40,7 @@ var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabas
 
 app.listen(process.env.PORT, function() {});
 
-//app.listen(3000, function() {});
+//app.listen(3000, function () {});
 
 function ModifyDocument(req, res, Collection, redirection) {
     var o_id = new mongodb.ObjectID(req.body.id);
@@ -52,7 +52,7 @@ function ModifyDocument(req, res, Collection, redirection) {
 }
 
 function getCollection(Collection, res) {
-    Collection.find().toArray(function(err, results) {
+    Collection.find().toArray(function (err, results) {
         var collection = {results: results};
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(collection));
@@ -73,14 +73,14 @@ MongoClient.connect(url, function (err, db) {
         var Files = db.collection('fs.files');
 
         Grid.mongo = mongoose.mongo;
-        var gfs = Grid(db);
+        var gfs = new Grid(db);
 
         function saveDocument(req, res, Collection, redirection) {
             if (req.file !== undefined) {
                 console.log("Picname :: ", picname);
                 req.body.image = picname;
             }
-            Collection.save(req.body, function(err, result) {
+            Collection.save(req.body, function (err, result) {
                 if (err) return console.log(err);
                 console.log(req.body);
                 console.log('saved to database');
@@ -104,7 +104,7 @@ MongoClient.connect(url, function (err, db) {
             });
         }
 
-        function uploadToDb(req){
+        function uploadToDb(req) {
             var dirname = __dirname;
             console.log(dirname);
             console.log(req.file);
@@ -120,7 +120,7 @@ MongoClient.connect(url, function (err, db) {
             read_stream.pipe(writestream);
         }
 
-        app.get('/images/:id',function(req,res){
+        app.get('/images/:id',function (req, res) {
             var pic_id = req.params.id;
             console.log("req.params: ", req.params);
 
@@ -307,6 +307,15 @@ MongoClient.connect(url, function (err, db) {
         //Get list of category
         app.get('/getSousCategories', function(req, res) {
             getCollection(SousCategorie, res);
+        });
+
+        app.get('/getSousCategorie/:idSousCat', function(req, res) {
+            var o_id = new mongodb.ObjectID(req.params.idSousCat);
+            SousCategorie.findOne({categorie: req.params.idSousCat}, function(err, document) {
+                console.log(JSON.stringify(document));
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({results: document}));
+            });
         });
 
     } // Fin else
