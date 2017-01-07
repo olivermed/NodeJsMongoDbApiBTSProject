@@ -1,104 +1,104 @@
 <% include header.ejs %>
 <!-- Page Produit -->
-    <div id="wrapper">
+<div id="wrapper">
 
-        
-        <!-- /#sidebar-wrapper -->
-        <% include side_bar.ejs %>
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <form class="form-inline" action="/addProductSite" method="POST" enctype="multipart/form-data">
-                                <input type="text" placeholder="nom" name="nom">
-                                <input type="text" placeholder="prix" name="prix">
+    <!-- /#sidebar-wrapper -->
+    <% include side_bar.ejs %>
 
-                                <input type="text" placeholder="description" name="description">
-                                <select  name="sousCategorie">
-                                    <% for(var i=0; i<sousCategories.length; i++) {%>
-                                        <option value="<%= sousCategories[i]._id %>"><%= sousCategories[i].sousCategorie %></option>
-                                    <% } %>
-                                </select>
-                                <input type="file" name="image" onchange="previewFile()">
-                                <img src="" height="200" alt="Image preview...">
-                                <button type="submit">Add</button>
-                            </form>
-                        </div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" action="/addProductSite" method="POST" enctype="multipart/form-data">
+                            <input type="text" placeholder="nom" name="nom">
+                            <input type="text" placeholder="prix" name="prix">
+
+                            <input type="text" placeholder="description" name="description">
+                            <select  name="sousCategorie">
+                                <% for(var i=0; i<sousCategories.length; i++) {%>
+                                <option value="<%= sousCategories[i]._id %>"><%= sousCategories[i].sousCategorie %></option>
+                                <% } %>
+                            </select>
+                            <input type="file" name="image" onchange="previewFile()">
+                            <img src="" height="200" alt="Image preview...">
+                            <button type="submit">Add</button>
+                        </form>
                     </div>
-                    <table class="table products">
+                </div>
+                <table class="table products">
                     <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Nom</th>
-                        <th>Prix</th>
-                        <th>Description</th>
-                        <th>Sous Categorie</th>
-                        <th>Image</th>
-                      </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Description</th>
+                            <th>Sous Categorie</th>
+                            <th>Image</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <% for(var i=0; i<products.length; i++) {%>
-                      <tr>
-                        <td><%= products[i]._id %></td>
-                        <td><%= products[i].nom %></td>
-                        <td><%= products[i].prix %></td>
-                        <td><%= products[i].description %></td>
-                        <td>
-                            <% for(var j=0; j<sousCategories.length; j++) {
-                                if (products[i].sousCategorie == sousCategories[j]._id) { %>
-                                       <%= sousCategories[j].sousCategorie %>
-                                    <% }
+                        <% for(var i=0; i<products.length; i++) {%>
+                        <tr>
+                            <td><%= products[i]._id %></td>
+                            <td><%= products[i].nom %></td>
+                            <td><%= products[i].prix %></td>
+                            <td><%= products[i].description %></td>
+                            <td>
+                                <% for(var j=0; j<sousCategories.length; j++) {
+                                    if (products[i].sousCategorie == sousCategories[j]._id) { %>
+                                <%= sousCategories[j].sousCategorie %>
+                                <% }
                                 } %>
-                        </td>
-                        <td><img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>" style="width:128px;height:128px;"></td>
-                        <td>
-                          <form action="/modifySetProductSite" method="POST">
-                            <input type="hidden" name="id" value="<%= products[i]._id %>">
-                            <button type="submit" class="btn btn-warning">Modifier</button>
-                          </form>
-                          <form action="/deleteProductSite" method="POST">
-                            <input type="hidden" name="id" value="<%= products[i]._id %>">
-                            <button type="submit" class="btn btn-danger">Delete</button>  
-                          </form>
-                        </td>
-                      </tr>
-                    <% } %>
+                            </td>
+                            <td><img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>" style="width:128px;height:128px;"></td>
+                            <td>
+                                <form action="/modifySetProductSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= products[i]._id %>">
+                                    <button type="submit" class="btn btn-warning">Modifier</button>
+                                </form>
+                                <form action="/deleteProductSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= products[i]._id %>">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% } %>
                     </tbody>
-                  </table>
-                </div>
+                </table>
             </div>
         </div>
-        <!-- /#page-content-wrapper -->
     </div>
+    <!-- /#page-content-wrapper -->
+</div>
 
-    <!-- Menu Toggle Script -->
-    <script>
+<!-- Menu Toggle Script -->
+<script>
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
-        
+
     function previewFile(){
-       var preview = document.querySelector('img'); //selects the query named img
-       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-       var reader  = new FileReader();
+        var preview = document.querySelector('img'); //selects the query named img
+        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+        var reader  = new FileReader();
 
-       reader.onloadend = function () {
-           preview.src = reader.result;
-       }
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
 
-       if (file) {
-           reader.readAsDataURL(file); //reads the data as a URL
-       } else {
-           preview.src = "";
-       }
-  }
+        if (file) {
+            reader.readAsDataURL(file); //reads the data as a URL
+        } else {
+            preview.src = "";
+        }
+    }
 
-  previewFile();
-    </script>
+    previewFile();
+</script>
 
 </body>
 

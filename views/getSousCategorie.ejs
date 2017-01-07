@@ -1,80 +1,80 @@
 <% include header.ejs %>
 <div id="wrapper">
 
-        <!-- Sidebar -->
-      <% include side_bar.ejs %>
-        <!-- /#sidebar-wrapper -->
+    <!-- Sidebar -->
+    <% include side_bar.ejs %>
+    <!-- /#sidebar-wrapper -->
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <form class="form-inline" action="/addSousCategorieSite" method="POST" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Sous Categorie</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" placeholder="Sous Categorie" name="sousCategorie">
-                                    </div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" action="/addSousCategorieSite" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Sous Categorie</label>
+                                <div class="col-sm-10">
+                                    <input type="text" placeholder="Sous Categorie" name="sousCategorie">
                                 </div>
-                                <select  name="categorie">
-                                    <% for(var i=0; i<categories.length; i++) {%>
-                                        <option value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
-                                    <% } %>
-                                </select>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Images</label>
-                                    <div class="col-sm-10">
-                                      <input type="file" placeholder="Images" name="image">
-                                    </div>
+                            </div>
+                            <select  name="categorie">
+                                <% for(var i=0; i<categories.length; i++) {%>
+                                <option value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
+                                <% } %>
+                            </select>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Images</label>
+                                <div class="col-sm-10">
+                                    <input type="file" placeholder="Images" name="image">
                                 </div>
-                                <button type="submit">Add</button>
-                            </form>
-                        </div>
+                            </div>
+                            <button type="submit">Add</button>
+                        </form>
                     </div>
-                  <table class="table categories">
+                </div>
+                <table class="table categories">
                     <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Sous Categories</th>
-                        <th>Categories</th>
-                        <th>Image</th>
-                      </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Sous Categories</th>
+                            <th>Categories</th>
+                            <th>Image</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <% for(var i=0; i<sousCategories.length; i++) {%>
-                      <tr>
-                        <td><%= sousCategories[i]._id %></td>
-                        <td><%= sousCategories[i].sousCategorie %></td>
-                        <td>
-                            <% for(var j=0; j<categories.length; j++) {
-                                if (sousCategories[i].categorie == categories[j]._id) { %>
-                                       <%= categories[j].categorie %>
-                                    <% }
+                        <% for(var i=0; i<sousCategories.length; i++) {%>
+                        <tr>
+                            <td><%= sousCategories[i]._id %></td>
+                            <td><%= sousCategories[i].sousCategorie %></td>
+                            <td>
+                                <% for(var j=0; j<categories.length; j++) {
+                                    if (sousCategories[i].categorie == categories[j]._id) { %>
+                                <%= categories[j].categorie %>
+                                <% }
                                 } %>
-                        </td>
-                        <td>
-                            <img class="img-rounded" src="/images/<%= sousCategories[i].image %>" alt="<%= sousCategories[i].image %>" style="width:128px;height:128px;">
-                          </td>
-                        <td>
-                          <form action="/ModifySousCategorieSetSite" method="POST">
-                            <input type="hidden" name="id" value="<%= sousCategories[i]._id %>">
-                            <button type="submit" class="btn btn-warning">Modifier</button>
-                          </form>
-                          <form action="/deleteSousCategorieSite" method="POST">
-                            <input type="hidden" name="id" value="<%= sousCategories[i]._id %>">
-                            <button type="submit" class="btn btn-danger">Delete</button>  
-                          </form>
-                        </td>
-                      </tr>
-                    <% } %>
+                            </td>
+                            <td>
+                                <img class="img-rounded" src="/images/<%= sousCategories[i].image %>" alt="<%= sousCategories[i].image %>" style="width:128px;height:128px;">
+                            </td>
+                            <td>
+                                <form action="/ModifySousCategorieSetSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= sousCategories[i]._id %>">
+                                    <button type="submit" class="btn btn-warning">Modifier</button>
+                                </form>
+                                <form action="/deleteSousCategorieSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= sousCategories[i]._id %>">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% } %>
                     </tbody>
-                  </table>
-                </div>
+                </table>
             </div>
         </div>
-        <!-- /#page-content-wrapper -->
     </div>
+    <!-- /#page-content-wrapper -->
+</div>
 </body>
 </html>

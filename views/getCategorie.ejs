@@ -2,55 +2,55 @@
 
 <div id="wrapper">
 
-        <!-- Sidebar -->
-      <% include side_bar.ejs %>
-        <!-- /#sidebar-wrapper -->
+    <!-- Sidebar -->
+    <% include side_bar.ejs %>
+    <!-- /#sidebar-wrapper -->
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <form class="form-inline" action="/addCategorieSite" method="POST" enctype="multipart/form-data">
-                                <input type="text" placeholder="Category" name="categorie">
-                                <input type="file" name="image">
-                                <button type="submit">Add</button>
-                            </form>
-                        </div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" action="/addCategorieSite" method="POST" enctype="multipart/form-data">
+                            <input type="text" placeholder="Category" name="categorie">
+                            <input type="file" name="image">
+                            <button type="submit">Add</button>
+                        </form>
                     </div>
-                  <table class="table categories">
+                </div>
+                <table class="table categories">
                     <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Categories</th>
-                        <th>Image</th>
-                      </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Categories</th>
+                            <th>Image</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <% for(var i=0; i<categories.length; i++) {%>
-                      <tr>
-                        <td><%= categories[i]._id %></td>
-                        <td><%= categories[i].categorie %></td>
-                        <td><img src="/images/<%= categories[i].image %>" alt="<%= categories[i].image %>" style="width:128px;height:128px;"></td>
-                        <td>
-                          <form action="/ModifyCategorieSetSite" method="POST">
-                            <input type="hidden" name="id" value="<%= categories[i]._id %>">
-                            <button type="submit" class="btn btn-warning">Modifier</button>
-                          </form>
-                          <form action="/deleteCategorieSite" method="POST">
-                            <input type="hidden" name="id" value="<%= categories[i]._id %>">
-                            <button type="submit" class="btn btn-danger">Delete</button>  
-                          </form>
-                        </td>
-                      </tr>
-                    <% } %>
+                        <% for(var i=0; i<categories.length; i++) {%>
+                        <tr>
+                            <td><%= categories[i]._id %></td>
+                            <td><%= categories[i].categorie %></td>
+                            <td><img src="/images/<%= categories[i].image %>" alt="<%= categories[i].image %>" style="width:128px;height:128px;"></td>
+                            <td>
+                                <form action="/ModifyCategorieSetSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= categories[i]._id %>">
+                                    <button type="submit" class="btn btn-warning">Modifier</button>
+                                </form>
+                                <form action="/deleteCategorieSite" method="POST">
+                                    <input type="hidden" name="id" value="<%= categories[i]._id %>">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% } %>
                     </tbody>
-                  </table>
-                </div>
+                </table>
             </div>
         </div>
-        <!-- /#page-content-wrapper -->
     </div>
+    <!-- /#page-content-wrapper -->
+</div>
 </body>
 </html>
