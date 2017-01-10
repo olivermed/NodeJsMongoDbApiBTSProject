@@ -42,23 +42,6 @@ app.listen(process.env.PORT, function() {});
 
 //app.listen(3000, function () {});
 
-function ModifyDocument(req, res, Collection, redirection) {
-    var o_id = new mongodb.ObjectID(req.body.id);
-    Collection.update({_id: o_id}, {
-        $set: req.body,
-        $currentDate: { lastModified: true }
-    });
-    res.redirect(redirection);
-}
-
-function getCollection(Collection, res) {
-    Collection.find().toArray(function (err, results) {
-        var collection = {results: results};
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.end(JSON.stringify(collection));
-    });
-}
-
 //Connexion to the server
 MongoClient.connect(url, function (err, db) {
     if (err) {
@@ -75,6 +58,26 @@ MongoClient.connect(url, function (err, db) {
         Grid.mongo = mongoose.mongo;
         var gfs = new Grid(db);
 
+        //Db collection modifyer
+        function ModifyDocument(req, res, Collection, redirection) {
+            var o_id = new mongodb.ObjectID(req.body.id);
+            Collection.update({_id: o_id}, {
+                $set: req.body,
+                $currentDate: { lastModified: true }
+            });
+            res.redirect(redirection);
+        }
+
+        //Db collection getter
+        function getCollection(Collection, res) {
+            Collection.find().toArray(function (err, results) {
+                var collection = {results: results};
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(collection));
+            });
+        }
+
+        //Db collection saver
         function saveDocument(req, res, Collection, redirection) {
             if (req.file !== undefined) {
                 console.log("Picname :: ", picname);
@@ -89,6 +92,7 @@ MongoClient.connect(url, function (err, db) {
             });
         }
 
+        //Db collection remover
         function removeDocument(req, res, Collection, redirection) {
             var o_id = new mongodb.ObjectID(req.body.id);
             Collection.find({_id: o_id}).toArray(function(err, obj){
@@ -104,6 +108,7 @@ MongoClient.connect(url, function (err, db) {
             });
         }
 
+        //File uploader in db
         function uploadToDb(req) {
             var dirname = __dirname;
             console.log(dirname);
@@ -120,6 +125,7 @@ MongoClient.connect(url, function (err, db) {
             read_stream.pipe(writestream);
         }
 
+        //Getter of images
         app.get('/images/:id',function (req, res) {
             var pic_id = req.params.id;
             console.log("req.params: ", req.params);
@@ -252,12 +258,12 @@ MongoClient.connect(url, function (err, db) {
             saveDocument(req, res, SousCategorie, '/getSousCategorieSite');
         });
 
-        //Modify a category
+        //Modify a sub category
         app.post('/modifySousCategorieSite', upload.single('image'), function (req, res, next) {
             ModifyDocument(req, res, SousCategorie, '/getSousCategorieSite');
         });
 
-        //Delete a categorie
+        //Delete a sub categorie
         app.post('/deleteSousCategorieSite', function(req, res) {
             //console.log("Object to delete", req.body);
             removeDocument(req, res, SousCategorie, '/getSousCategorieSite');
@@ -270,7 +276,7 @@ MongoClient.connect(url, function (err, db) {
             getCollection(Product, res);
         });
 
-        //Get list of products
+        //Get list of products by sub category
         app.get('/getProductsBySubCat/:subCat', function(req, res) {
             Product.find({sousCategorie: req.params.subCat}).toArray(function(err, result) {
                 console.log(result);
@@ -280,8 +286,8 @@ MongoClient.connect(url, function (err, db) {
         });
 
         //Get product by id
-        app.get('/getProduct', function(req, res) {
-            var o_id = new mongodb.ObjectID("5838b47a68546040400835a4");
+        app.get('/getProduct/:id', function(req, res) {
+            var o_id = new mongodb.ObjectID(req.params.id);
             Product.findOne({_id: o_id}, function(err, document) {
                 //console.log(JSON.stringify(document));
                 res.writeHead(200, {"Content-Type": "application/json"});
@@ -294,9 +300,9 @@ MongoClient.connect(url, function (err, db) {
             getCollection(Categorie, res);
         });
 
-        //Get product by id
-        app.get('/getCategorie', function(req, res) {
-            var o_id = new mongodb.ObjectID("5838b47a68546040400835a4");
+        //Get category by id
+        app.get('/getCategorie/:id', function(req, res) {
+            var o_id = new mongodb.ObjectID(req.params.id);
             Categorie.findOne({_id: o_id}, function(err, document) {
                 console.log(JSON.stringify(document));
                 res.writeHead(200, {"Content-Type": "application/json"});
@@ -304,14 +310,15 @@ MongoClient.connect(url, function (err, db) {
             });
         });
 
-        //Get list of category
+        //Get list of sub category
         app.get('/getSousCategories', function(req, res) {
             getCollection(SousCategorie, res);
         });
 
-        app.get('/getSousCategorie/:idSousCat', function(req, res) {
-            var o_id = new mongodb.ObjectID(req.params.idSousCat);
-            SousCategorie.find({categorie: req.params.idSousCat}).toArray(function(err, document) {
+        //Get sub catgories by id category
+        app.get('/getSousCategorie/:idCat', function(req, res) {
+            var o_id = new mongodb.ObjectID(req.params.idCat);
+            SousCategorie.find({categorie: req.params.idCat}).toArray(function(err, document) {
                 console.log(JSON.stringify(document));
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({results: document}));
