@@ -69,7 +69,7 @@
                                 } %>
                             </td>
                             <td>
-                                <% if (typeof products[i].image.length !== 'undefined') {
+                                <% if (typeof products[i].image == 'object') {
                                     for(var j=0; j<products[i].image.length; j++) { %>
                                 <img src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;">
                                 <% }
