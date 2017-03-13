@@ -35,7 +35,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Images :</label>
-                                <input type="file" name="image" onchange="previewFile()">
+                                <input type="file" multiple name="image" onchange="previewFile()">
                                 <p class="help-block">Inserez une image.</p>
                             </div>
                             <img src="" height="200" alt="Image preview...">
@@ -68,7 +68,11 @@
                                 <% }
                                 } %>
                             </td>
-                            <td><img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>" style="width:128px;height:128px;"></td>
+                            <td>
+                                <% for(var j=0; j<products[i].image.length; j++) { %>
+                                    <img src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;">
+                                <% } %>
+                            </td>
                             <td>
                                 <form action="/modifySetProductSite" method="POST">
                                     <input type="hidden" name="id" value="<%= products[i]._id %>">

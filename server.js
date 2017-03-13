@@ -2,7 +2,7 @@ var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
 var multer  = require('multer');
-var upload = multer({ dest: 'Public/images' });
+//var upload = multer({ dest: 'Public/images' });
 var fs = require('fs');
 var mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
@@ -83,6 +83,11 @@ MongoClient.connect(url, function (err, db) {
                 console.log("Picname :: ", picname);
                 req.body.image = picname;
             }
+
+            if (req.files !== undefined) {
+                console.log("Picname :: ", picname);
+                req.body.image = req.files;
+            }
             Collection.save(req.body, function (err, result) {
                 if (err) return console.log(err);
                 console.log(req.body);
@@ -108,12 +113,10 @@ MongoClient.connect(url, function (err, db) {
             });
         }
 
-        //File uploader in db
-        function uploadToDb(req) {
-            var dirname = __dirname;
+        function uploadSingleImage(req){
             console.log(dirname);
-            console.log(req.file);
-            //var filename = req.file.name;
+            var dirname = __dirname;
+            console.log("Upload single file : ", req.file);
             var path = req.file.path;
             var type = req.file.mimetype;
 
@@ -123,6 +126,35 @@ MongoClient.connect(url, function (err, db) {
                 filename: picname
             });
             read_stream.pipe(writestream);
+        }
+
+        function uploadMultipleImage(req){
+            console.log(dirname);
+            var dirname = __dirname;
+            console.log("Upload multiple files : ", req.files);
+
+            for (var i = 0; i < req.files.length; i++) {
+                var path = req.files[i].path;
+                var type = req.files[i].mimetype;
+
+                var read_stream =  fs.createReadStream(dirname + '/' + path);
+
+                var writestream = gfs.createWriteStream({
+                    filename: req.files[i].filename
+                });
+                read_stream.pipe(writestream);
+            }
+        }
+
+        //File uploader in db
+        function uploadToDb(req) {
+            if (req.file !== undefined) {
+                uploadSingleImage(req);
+            }
+
+            if (req.files !== undefined) {
+                uploadMultipleImage(req);
+            }
         }
 
         //Getter of images
@@ -178,7 +210,8 @@ MongoClient.connect(url, function (err, db) {
         });
 
         //Add a product
-        app.post('/addProductSite', upload.single('image'), function (req, res, next) {
+        app.post('/addProductSite', upload.array('image', 4), function (req, res, next) {
+            console.log("File added:", req.files);
             saveDocument(req, res, Product, '/');
         });
 
