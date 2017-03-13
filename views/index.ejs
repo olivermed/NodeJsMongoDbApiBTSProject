@@ -69,9 +69,13 @@
                                 } %>
                             </td>
                             <td>
-                                <% for(var j=0; j<products[i].image.length; j++) { %>
-                                    <img src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;">
-                                <% } %>
+                                <% for(var j=0; j<products[i].image.length; j++) {
+                                    if (products[i].sousCategorie == sousCategories[j]._id) { %>
+                                <%= <img src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;"> %>
+                                <% } else {
+                                    <img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>"style="width:128px;height:128px;">
+                                }
+                                } %>
                             </td>
                             <td>
                                 <form action="/modifySetProductSite" method="POST">
