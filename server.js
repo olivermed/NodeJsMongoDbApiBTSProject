@@ -118,7 +118,6 @@ MongoClient.connect(url, function (err, db) {
             var dirname = __dirname;
             console.log("Upload single file : ", req.file);
             var path = req.file.path;
-            var type = req.file.mimetype;
 
             var read_stream =  fs.createReadStream(dirname + '/' + path);
 
@@ -135,7 +134,6 @@ MongoClient.connect(url, function (err, db) {
 
             for (var i = 0; i < req.files.length; i++) {
                 var path = req.files[i].path;
-                var type = req.files[i].mimetype;
 
                 var read_stream =  fs.createReadStream(dirname + '/' + path);
 
