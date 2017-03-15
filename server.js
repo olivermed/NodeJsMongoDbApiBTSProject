@@ -33,14 +33,14 @@ app.set('view engine', 'ejs');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL
-//var url = 'mongodb://localhost:27017/DartyDataBase';
+var url = 'mongodb://localhost:27017/DartyDataBase';
 
-var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
+//var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
 //To check The database : https://mlab.com/
 
-app.listen(process.env.PORT, function() {});
+//app.listen(process.env.PORT, function() {});
 
-//app.listen(3000, function () {});
+app.listen(3000, function () {});
 
 //Connexion to the server
 MongoClient.connect(url, function (err, db) {
@@ -61,6 +61,11 @@ MongoClient.connect(url, function (err, db) {
         //Db collection modifyer
         function ModifyDocument(req, res, Collection, redirection) {
             var o_id = new mongodb.ObjectID(req.body.id);
+            if (req.file != undefined)
+                req.body.image = req.file.filename;
+            else if (req.files != undefined){
+                req.body.image = req.files;
+            }
             Collection.update({_id: o_id}, {
                 $set: req.body,
                 $currentDate: { lastModified: true }
@@ -202,7 +207,7 @@ MongoClient.connect(url, function (err, db) {
         });
 
         //Modify a product
-        app.post('/modifyProductSite', upload.single('image'), function (req, res, next){
+        app.post('/modifyProductSite', upload.array('image', 4), function (req, res, next){
             console.log("Object to update", req.body);
             ModifyDocument(req, res, Product, '/');
         });
