@@ -61,10 +61,13 @@ MongoClient.connect(url, function (err, db) {
         //Db collection modifyer
         function ModifyDocument(req, res, Collection, redirection) {
             var o_id = new mongodb.ObjectID(req.body.id);
-            if (req.file != undefined)
+            if (req.file != undefined) {
                 req.body.image = req.file.filename;
+                uploadSingleImage(req);
+            }
             else if (req.files != undefined){
                 req.body.image = req.files;
+                uploadMultipleImage(req);
             }
             Collection.update({_id: o_id}, {
                 $set: req.body,
