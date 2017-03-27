@@ -330,7 +330,7 @@ MongoClient.connect(url, function (err, db) {
             Product.findOne({_id: o_id}, function(err, document) {
                 //console.log(JSON.stringify(document));
                 res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(document));
+                res.end(JSON.stringify({result: document}));
             });
         });
 
