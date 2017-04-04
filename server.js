@@ -210,13 +210,24 @@ MongoClient.connect(url, function (err, db) {
         });
 
         //Modify a product
-        app.post('/modifyProductSite', upload.array('image', 4), function (req, res, next){
+        /*app.post('/modifyProductSite', upload.array('image', 4), function (req, res, next){
             console.log("Object to update", req.body);
             ModifyDocument(req, res, Product, '/');
         });
 
         //Add a product
         app.post('/addProductSite', upload.array('image', 4), function (req, res, next) {
+            console.log("File added:", req.files);
+            saveDocument(req, res, Product, '/');
+        });*/
+
+        app.post('/modifyProductSite', upload.single('image'), function (req, res, next){
+            console.log("Object to update", req.body);
+            ModifyDocument(req, res, Product, '/');
+        });
+
+        //Add a product
+        app.post('/addProductSite', upload.single('image'), function (req, res, next) {
             console.log("File added:", req.files);
             saveDocument(req, res, Product, '/');
         });
