@@ -1,5 +1,28 @@
 <% include header.ejs %>
-
+<script>
+    tinymce.init({
+        selector: '#description',
+        height: 250,
+        theme: 'modern',
+        plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+        ],
+        toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+        image_advtab: true,
+        templates: [
+            { title: 'Test template 1', content: 'Test 1' },
+            { title: 'Test template 2', content: 'Test 2' }
+        ],
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tinymce.com/css/codepen.min.css'
+        ]
+    });
+</script>
 <div id="wrapper">
     <!-- Sidebar -->
     <% include side_bar.ejs %>
@@ -9,21 +32,39 @@
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="row">
-                <h1>Nom du produit : <%= product[0].nom %></h1>
-                <form class="form-inline" action="/modifyProductSite" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" value="<%= product[0]._id %>" name="id">
-                    <input type="text" value="<%= product[0].nom %>" placeholder="nom" name="nom">
-                    <input type="text" value="<%= product[0].prix %>" placeholder="prix" name="prix">
-                    <input type="text" value="<%= product[0].description %>" placeholder="description" name="description">
-                    <select  name="categorie">
-                        <% for(var i=0; i<categories.length; i++) {%>
-                        <option <% if (categories[i]._id == product[0].categorie) { %> selected <% } %>
-                                value="<%= categories[i]._id %>"><%= categories[i].categorie %></option>
-                        <% } %>
-                    </select>
-                    <input type="file" name="image">
-                    <button type="submit">Modifier</button>
-                </form>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h1>Nom du produit : <%= product[0].nom %></h1>
+                        <form action="/modifyProductSite" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input type="hidden" value="<%= product[0]._id %>" name="id">
+                            </div>
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input type="text" class="form-control" value="<%= product[0].nom %>" placeholder="nom" name="nom">
+                            </div>
+                            <div class="form-group">
+                                <label>Prix</label>
+                                <input type="text" class="form-control" class="form-control" value="<%= product[0].prix %>" placeholder="prix" name="prix">
+                            </div>
+                            <div class="form-group">
+                                <label>Sous categorie</label>
+                                <select  class="form-control" name="sousCategorie">
+                                    <% for(var i=0; i<sousCategorie.length; i++) {%>
+                                    <option <% if (sousCategorie[i]._id == product[0].sousCategorie) { %> selected <% } %>
+                                            value="<%= sousCategorie[i]._id %>"><%= sousCategorie[i].sousCategorie %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <input style="margin-top: 16px;margin-bottom: 16px;" type="file" name="image">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="description" type="text" placeholder="description" name="description"><%= product[0].description %></textarea>
+                            </div>
+                            <button class="btn btn-default" type="submit">Modifier</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

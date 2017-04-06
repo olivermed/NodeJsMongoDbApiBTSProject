@@ -200,11 +200,11 @@ MongoClient.connect(url, function (err, db) {
         //Formulaire to modify a product
         app.post('/modifySetProductSite', function(req, res){
             var o_id = new mongodb.ObjectID(req.body.id);
-            Categorie.find({}).sort( { categorie: 1 } ).toArray(function(err, resuslt) {
+            SousCategorie.find({}).sort( { sousCategorie: 1 } ).toArray(function(err, resuslt) {
                 Product.find({_id: o_id}).toArray(function(err, results) {
                     if (err) return console.log(err);
                     console.log("Document to modify :", results);
-                    res.render('modifyProduct.ejs', {product: results, categories: resuslt, side_bar: 1});
+                    res.render('modifyProduct.ejs', {product: results, sousCategorie: resuslt, side_bar: 1});
                 });
             });
         });

@@ -1,4 +1,28 @@
 <% include header.ejs %>
+<script>
+    tinymce.init({
+        selector: '#description',
+        height: 250,
+        theme: 'modern',
+        plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+        ],
+        toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+        image_advtab: true,
+        templates: [
+            { title: 'Test template 1', content: 'Test 1' },
+            { title: 'Test template 2', content: 'Test 2' }
+        ],
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tinymce.com/css/codepen.min.css'
+        ]
+    });
+</script>
 <!-- Page Produit -->
 <div id="wrapper">
 
@@ -23,7 +47,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <input type="text" placeholder="Description" class="form-control" name="description">
+                                <textarea id="description" type="text" placeholder="Description" class="form-control" name="description"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Sous-categorie</label>
@@ -60,7 +84,9 @@
                             <td><%= products[i]._id %></td>
                             <td><%= products[i].nom %></td>
                             <td><%= products[i].prix %></td>
-                            <td><%= products[i].description %></td>
+                            <td>
+                                <button id="btnDescriptionProduit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Voir la description<span id="descriptionSpan" hidden><%- products[i].description %></span></button>
+                                </td>
                             <td>
                                 <% for(var j=0; j<sousCategories.length; j++) {
                                     if (products[i].sousCategorie == sousCategories[j]._id) { %>
@@ -97,6 +123,13 @@
     </div>
     <!-- /#page-content-wrapper -->
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <p class="content"></p>
+        </div>
+    </div>
+</div>
 
 <!-- Menu Toggle Script -->
 <script>
@@ -120,6 +153,16 @@
             preview.src = "";
         }
     }
+
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.content').text(button.find( "#descriptionSpan" ).text())
+        //console.log(button.find( "#descriptionSpan" ).text())
+    });
 
     previewFile();
 </script>
