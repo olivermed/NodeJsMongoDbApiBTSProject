@@ -33,14 +33,14 @@ app.set('view engine', 'ejs');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL
-var url = 'mongodb://localhost:27017/DartyDataBase';
+//var url = 'mongodb://localhost:27017/DartyDataBase';
 
-//var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
+var url = "mongodb://OlivierMedec:123456789@ds163677.mlab.com:63677/dartydatabase";
 //To check The database : https://mlab.com/
 
-//app.listen(process.env.PORT, function() {});
+app.listen(process.env.PORT, function() {});
 
-app.listen(3000, function () {});
+//app.listen(3000, function () {});
 
 //Connexion to the server
 MongoClient.connect(url, function (err, db) {
