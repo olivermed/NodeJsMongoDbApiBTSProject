@@ -85,8 +85,13 @@
                             <td><%= products[i].nom %></td>
                             <td><%= products[i].prix %></td>
                             <td>
-                                <button id="btnDescriptionProduit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Voir la description<span id="descriptionSpan" hidden><%- products[i].description %></span></button>
-                                </td>
+                                <button id="btnDescriptionProduit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#descriptionModal">
+                                    Voir la description
+                                    <span id="descriptionSpan" hidden>
+                                        <%= products[i].description %>
+                                    </span>
+                                </button>
+                            </td>
                             <td>
                                 <% for(var j=0; j<sousCategories.length; j++) {
                                     if (products[i].sousCategorie == sousCategories[j]._id) { %>
@@ -97,10 +102,10 @@
                             <td>
                                 <% if (typeof products[i].image == 'object') {
                                     for(var j=0; j<products[i].image.length; j++) { %>
-                                <img src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;">
+                                <img class="img-rounded" src="/images/<%= products[i].image[j].filename %>" alt="<%= products[i].image[j].filename %>"style="width:128px;height:128px;">
                                 <% }
                                 } else { %>
-                                <img src="/images/<%= products[i].image %>" alt="<%= products[i].image %>"style="width:128px;height:128px;">
+                                <img class="img-rounded" src="/images/<%= products[i].image %>" alt="<%= products[i].image %>"style="width:128px;height:128px;">
                                 <%
                                 } %>
                             </td>
@@ -123,7 +128,7 @@
     </div>
     <!-- /#page-content-wrapper -->
 </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <p class="content"></p>
@@ -154,14 +159,11 @@
         }
     }
 
-    $('#exampleModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var recipient = button.data('whatever') // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    $('#descriptionModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var recipient = button.data('whatever')
         var modal = $(this)
-        modal.find('.content').text(button.find( "#descriptionSpan" ).text())
-        //console.log(button.find( "#descriptionSpan" ).text())
+        modal.find('.content').html(button.find( "#descriptionSpan" ).text())
     });
 
     previewFile();
