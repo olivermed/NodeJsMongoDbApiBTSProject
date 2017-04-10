@@ -12,11 +12,11 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h1>Nom du produit : <%= sousCategories[0].sousCategorie %></h1>
-                        <form action="/ModifyCategorieSite" method="POST" enctype="multipart/form-data">
+                        <form action="/ModifySousCategorieSite" method="POST" enctype="multipart/form-data">
                             <input type="hidden" value="<%= sousCategories[0]._id %>" name="id">
                             <div class="form-group">
                                 <label>Sous-Categories</label>
-                                <input type="text" class="form-control" value="<%= sousCategories[0].sousCategorie %>" placeholder="sousCategories" name="sousCategories">
+                                <input type="text" class="form-control" value="<%= sousCategories[0].sousCategorie %>" placeholder="sousCategorie" name="sousCategorie">
                             </div>
                             <div class="form-group">
                                  <label>Categorie</label>

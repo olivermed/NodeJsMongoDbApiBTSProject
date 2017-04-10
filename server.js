@@ -310,6 +310,7 @@ MongoClient.connect(url, function (err, db) {
 
         //Modify a sub category
         app.post('/modifySousCategorieSite', upload.single('image'), function (req, res, next) {
+            console.log("modifySousCategorieSite ", req.body)
             ModifyDocument(req, res, SousCategorie, '/getSousCategorieSite');
         });
 
